@@ -13,6 +13,7 @@ import javafx.scene.text.*;
 
 public class GUI extends Application {
 //Hello - Line
+	// now for wrath now for ruin and a red dawn!
 	public static final int size = 20; 
 	public static final int scene_height = size * 20 + 100;
 	public static final int scene_width = size * 20 + 200;
