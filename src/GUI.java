@@ -1,16 +1,20 @@
-import java.util.ArrayList;
-import java.util.List;
-
 import SimpleEdition.TCPClient;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUI extends Application {
 //Hello - Line
@@ -29,8 +33,9 @@ public class GUI extends Application {
 	private Label[][] fields;
 	private TextArea scoreList;
 
-	private TCPClient con = new TCPClient("localhost", 6666);
-	
+//	private TCPClient con = new TCPClient("localhost", 6666);
+private TCPClient con = new TCPClient("10.10.131.172", 6666);
+
 	private  String[] board = {    // 20x20
 			"wwwwwwwwwwwwwwwwwwww",
 			"w        ww        w",
@@ -136,7 +141,6 @@ public class GUI extends Application {
 			});
 			
             // Setting up standard players
-			
 			me = new Player("Orville",9,4,"up");
 			players.add(me);
 			fields[9][4].setGraphic(new ImageView(hero_up));

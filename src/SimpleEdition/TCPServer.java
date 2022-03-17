@@ -13,14 +13,34 @@ public class TCPServer {
 
 		while (true){
 			Socket connectionSocket = welcomSocket.accept();
-			addClient(connectionSocket);
+			String ip = connectionSocket.getInetAddress().toString();
 
-			StreamReader serverReadThread = new StreamReader(connectionSocket);
-			serverReadThread.start();
+			boolean isNewConnect = newConnectCheck(ip);
 
-			StreamWriter serverWriteThread = new StreamWriter("ServerWriter",connectionSocket);
-			serverWriteThread.start();
+			if (isNewConnect) {
+
+				addClient(connectionSocket);
+				StreamReader serverReadThread = new StreamReader(connectionSocket);
+				serverReadThread.start();
+
+				StreamWriter serverWriteThread = new StreamWriter("ServerWriter",connectionSocket);
+				serverWriteThread.start();
+
+			}
+
 		}
+	}
+
+	private static boolean newConnectCheck(String ip) {
+		boolean isNewConnect = true;
+
+		for (Socket s : clientConSockets) {
+			String exsistingIp = s.getInetAddress().toString();
+			if (ip.contains(exsistingIp)) {
+				isNewConnect = false;
+			}
+		}
+		return isNewConnect;
 	}
 
 	public static void addClient(Socket conSocket){

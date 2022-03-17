@@ -18,6 +18,7 @@ public class StreamReader extends Thread{
             try {
                 BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 String clientSentence = inFromClient.readLine();
+
                 System.out.println(clientSentence);
             } catch (IOException e) {
                 e.printStackTrace();
