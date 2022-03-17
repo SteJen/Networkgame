@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import SimpleEdition.TCPClient;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.stage.Stage;
@@ -27,6 +28,8 @@ public class GUI extends Application {
 
 	private Label[][] fields;
 	private TextArea scoreList;
+
+	private TCPClient con = new TCPClient("localhost", 6666);
 	
 	private  String[] board = {    // 20x20
 			"wwwwwwwwwwwwwwwwwwww",
@@ -102,8 +105,7 @@ public class GUI extends Application {
 			}
 			scoreList.setEditable(false);
 			
-			
-			grid.add(mazeLabel,  0, 0); 
+			grid.add(mazeLabel,  0, 0);
 			grid.add(scoreLabel, 1, 0); 
 			grid.add(boardGrid,  0, 1);
 			grid.add(scoreList,  1, 1);
@@ -114,11 +116,22 @@ public class GUI extends Application {
 
 			scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
 				switch (event.getCode()) {
-				case UP:    playerMoved(0,-1,"up");    break;
-				case DOWN:  playerMoved(0,+1,"down");  break;
-				case LEFT:  playerMoved(-1,0,"left");  break;
-				case RIGHT: playerMoved(+1,0,"right"); break;
-				default: break;
+				case UP:
+					playerMoved(0,-1,"up");
+					/*System.out.println(me.xpos+":"+me.ypos);*/
+					con.getClientWriteThread().write(me.xpos+":"+me.ypos);
+					break;
+				case DOWN:
+					playerMoved(0,+1,"down");
+					break;
+				case LEFT:
+					playerMoved(-1,0,"left");
+					break;
+				case RIGHT:
+					playerMoved(+1,0,"right");
+					break;
+				default:
+					break;
 				}
 			});
 			
@@ -193,7 +206,5 @@ public class GUI extends Application {
 		}
 		return null;
 	}
-
-	
 }
 
