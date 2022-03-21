@@ -1,20 +1,18 @@
-import SimpleEdition.TCPClient;
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import SimpleEdition.StreamReader;
+import SimpleEdition.TCPClient;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.*;
 
 public class GUI extends Application {
 //Hello - Line
@@ -33,8 +31,11 @@ public class GUI extends Application {
 	private Label[][] fields;
 	private TextArea scoreList;
 
-//	private TCPClient con = new TCPClient("localhost", 6666);
-private TCPClient con = new TCPClient("10.10.131.172", 6666);
+	private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666); //Steffen
+	//private TCPClient con = new TCPClient("10.10.139.198", 6666); //Lars
+	//private TCPClient con = new TCPClient("localHost", 6666); //Line
+
+	private JavaFxReadThread javaFxReadThread;
 
 	private  String[] board = {    // 20x20
 			"wwwwwwwwwwwwwwwwwwww",
@@ -69,6 +70,9 @@ private TCPClient con = new TCPClient("10.10.131.172", 6666);
 
 	@Override
 	public void start(Stage primaryStage) {
+
+
+
 		try {
 			GridPane grid = new GridPane();
 			grid.setHgap(10);
@@ -122,18 +126,19 @@ private TCPClient con = new TCPClient("10.10.131.172", 6666);
 			scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
 				switch (event.getCode()) {
 				case UP:
-					playerMoved(0,-1,"up");
+					//playerMoved(0,-1,"up");
 					/*System.out.println(me.xpos+":"+me.ypos);*/
-					con.getClientWriteThread().write(me.xpos+":"+me.ypos);
+					tcpClient.getClientWriter().write(me.xpos+":"+me.ypos);
 					break;
 				case DOWN:
-					playerMoved(0,+1,"down");
+					//playerMoved(0,+1,"down");
+					System.out.println("Down");
 					break;
 				case LEFT:
-					playerMoved(-1,0,"left");
+					//playerMoved(-1,0,"left");
 					break;
 				case RIGHT:
-					playerMoved(+1,0,"right");
+					//playerMoved(+1,0,"right");
 					break;
 				default:
 					break;
@@ -141,6 +146,7 @@ private TCPClient con = new TCPClient("10.10.131.172", 6666);
 			});
 			
             // Setting up standard players
+			
 			me = new Player("Orville",9,4,"up");
 			players.add(me);
 			fields[9][4].setGraphic(new ImageView(hero_up));
@@ -153,6 +159,11 @@ private TCPClient con = new TCPClient("10.10.131.172", 6666);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+
+		javaFxReadThread = new JavaFxReadThread(tcpClient.getClientReadThread());
+		javaFxReadThread.start();
+
+
 	}
 
 	public void playerMoved(int delta_x, int delta_y, String direction) {
@@ -209,6 +220,30 @@ private TCPClient con = new TCPClient("10.10.131.172", 6666);
 			}
 		}
 		return null;
+	}
+
+	public class JavaFxReadThread extends Thread{
+		private final StreamReader streamReader;
+
+		public JavaFxReadThread(StreamReader streamReader) {
+			this.streamReader = streamReader;
+		}
+
+		@Override
+		public void run() {
+			Platform.runLater(()->{
+				while (true) {
+					String msg = this.streamReader.read();
+
+					if (msg != null) {
+						System.out.println("msg message: " + msg);
+						playerMoved(0,-1, "up");
+
+					}
+				}
+
+			});
+		}
 	}
 }
 

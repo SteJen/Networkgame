@@ -4,14 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
-public class StreamReader extends Thread{
-    private Deque<String> messages = new ArrayDeque<>();
+public class StreamReaderServer extends Thread{
     private BufferedReader in;
+    private CriticalZone criticalZone;
 
-    public StreamReader(Socket connectionSocket) {
+    public StreamReaderServer(Socket connectionSocket, CriticalZone criticalZone) {
+        this.criticalZone = criticalZone;
+
         try {
             in = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
         } catch (IOException e) {
@@ -20,21 +20,13 @@ public class StreamReader extends Thread{
     }
 
     public void run() {
-        System.out.println("ikke her");
         while (true) {
             try {
                 String data = in.readLine();
-                add(data);
+                criticalZone.push(data);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public synchronized void add(String msg) {
-        messages.add(msg);
-    }
-    public synchronized String read() {
-        return messages.poll();
     }
 }

@@ -5,37 +5,44 @@ import java.net.Socket;
 
 
 public class TCPClient {
-	private Socket clientSocket;
 	private StreamReader clientReadThread;
-	private StreamWriter clientWriteThread;
+	private StreamWriter clientWriter;
+	private Socket clientSocket;
 
-	public TCPClient(String host, int port) {
-
+	public TCPClient(String ip, int port){
 		try {
-			clientSocket = new Socket(host, port);
-
-			clientReadThread = new StreamReader(clientSocket);
-			clientReadThread.start();
-
-			clientWriteThread = new StreamWriter("clientWriter", clientSocket);
-			clientWriteThread.start();
+			clientSocket = new Socket(ip, port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		//starting threads
+		clientReadThread = new StreamReader(clientSocket);
+		clientReadThread.start();
+
+		clientWriter = new StreamWriter(clientSocket);
+
 	}
 
-	public StreamWriter getClientWriteThread() {
-		return clientWriteThread;
+	public StreamReader getClientReadThread() {
+		return clientReadThread;
+	}
+
+	public StreamWriter getClientWriter() {
+		return clientWriter;
 	}
 
 	/*public static void main(String[] args) throws Exception, IOException {
-		// dns forespørgsel
-		*//*DnsClient dnsClient = new DnsClient("localhost");
-		String ip = dnsClient.translateIpToDnsName("localhost");
-		System.out.println("requested ip: " +ip);
-		dnsClient.stopClient();*//*
 
-		// Tcp delen
 
+		/*System.out.println("press a s d w s to send left right up down commands command should be followed by enter");
+		ScanCharFromKeyBoard charScanner = new ScanCharFromKeyBoard(clientWriter);
+		charScanner.run();*/
+
+		/*BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+		while (true) {
+			String line = inFromUser.readLine();
+			clientWriteThread.write(line);
+		}
 	}*/
 }
