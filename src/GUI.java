@@ -3,7 +3,7 @@ import java.util.List;
 
 import SimpleEdition.TCPClient;
 import SimpleEdition.StreamReader;
-
+// steffen
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
