@@ -32,8 +32,6 @@ public class GUI extends Application {
 	private TextArea scoreList;
 
 	private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666); //Steffen
-	//private TCPClient con = new TCPClient("10.10.139.198", 6666); //Lars
-	//private TCPClient con = new TCPClient("localHost", 6666); //Line
 
 	private JavaFxReadThread javaFxReadThread;
 
@@ -231,7 +229,7 @@ public class GUI extends Application {
 
 		@Override
 		public void run() {
-			Platform.runLater(()->{
+			/*Platform.runLater(()->{*/
 				while (true) {
 					String msg = this.streamReader.read();
 
@@ -242,7 +240,7 @@ public class GUI extends Application {
 					}
 				}
 
-			});
+			/*});*/
 		}
 	}
 }
