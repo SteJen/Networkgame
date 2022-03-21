@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import SimpleEdition.StreamReader;
 import SimpleEdition.TCPClient;
+import SimpleEdition.StreamReader;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -32,8 +33,8 @@ public class GUI extends Application {
 	private TextArea scoreList;
 
 	private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666); //Steffen
-	//private TCPClient con = new TCPClient("10.10.139.198", 6666); //Lars
-	//private TCPClient con = new TCPClient("localHost", 6666); //Line
+	//private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666); //Lars
+//	private TCPClient tcpClient = new TCPClient("localHost", 6666); //Line
 
 	private JavaFxReadThread javaFxReadThread;
 
@@ -128,10 +129,12 @@ public class GUI extends Application {
 				case UP:
 					//playerMoved(0,-1,"up");
 					/*System.out.println(me.xpos+":"+me.ypos);*/
-					tcpClient.getClientWriter().write(me.xpos+":"+me.ypos);
+					String msg = "0,-1,up";
+					tcpClient.getClientWriter().write(msg);
 					break;
 				case DOWN:
 					//playerMoved(0,+1,"down");
+					tcpClient.getClientWriter().write(me.xpos+":"+me.ypos);
 					System.out.println("Down");
 					break;
 				case LEFT:
@@ -231,7 +234,7 @@ public class GUI extends Application {
 
 		@Override
 		public void run() {
-			Platform.runLater(()->{
+//			Platform.runLater(()->{
 				while (true) {
 					String msg = this.streamReader.read();
 
@@ -242,7 +245,7 @@ public class GUI extends Application {
 					}
 				}
 
-			});
+//			});
 		}
 	}
 }
