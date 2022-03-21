@@ -125,29 +125,27 @@ public class GUI extends Application {
 			primaryStage.show();
 
 			scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+				String msg=null;
 				switch (event.getCode()) {
 				case UP:
-					//playerMoved(0,-1,"up");
-					/*System.out.println(me.xpos+":"+me.ypos);*/
-					String msg = "0,-1,up";
-					tcpClient.getClientWriter().write(msg);
+					msg="0,-1,up";
 					break;
 				case DOWN:
-					//playerMoved(0,+1,"down");
-					tcpClient.getClientWriter().write(me.xpos+":"+me.ypos);
-					System.out.println("Down");
+					msg="0,1,down";
 					break;
 				case LEFT:
-					//playerMoved(-1,0,"left");
+					msg="-1,0,left";
 					break;
 				case RIGHT:
-					//playerMoved(+1,0,"right");
+					msg="1,0,right";
 					break;
 				default:
 					break;
 				}
+				if (msg != null) {
+					tcpClient.getClientWriter().write(msg);
+				}
 			});
-			
             // Setting up standard players
 			
 			me = new Player("Orville",9,4,"up");
@@ -239,8 +237,9 @@ public class GUI extends Application {
 					String msg = this.streamReader.read();
 
 					if (msg != null) {
+						String[] splitted = msg.split(",");
 						System.out.println("msg message: " + msg);
-						playerMoved(0,-1, "up");
+						playerMoved(Integer.parseInt(splitted[0]),Integer.parseInt(splitted[1]), splitted[2]);
 
 					}
 				}
