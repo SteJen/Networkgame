@@ -20,7 +20,6 @@ public class StreamReader extends Thread{
     }
 
     public void run() {
-        System.out.println("ikke her");
         while (true) {
             try {
                 String data = in.readLine();

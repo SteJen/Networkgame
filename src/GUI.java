@@ -32,7 +32,7 @@ public class GUI extends Application {
 	private Label[][] fields;
 	private TextArea scoreList;
 
-	private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666); //Steffen
+	private TCPClient tcpClient = new TCPClient("localhost", 6666); //Steffen
 	//private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666); //Lars
 //	private TCPClient tcpClient = new TCPClient("localHost", 6666); //Line
 
@@ -72,7 +72,8 @@ public class GUI extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 
-
+		javaFxReadThread = new JavaFxReadThread(tcpClient.getClientReadThread());
+		javaFxReadThread.start();
 
 		try {
 			GridPane grid = new GridPane();
@@ -160,11 +161,6 @@ public class GUI extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
-		javaFxReadThread = new JavaFxReadThread(tcpClient.getClientReadThread());
-		javaFxReadThread.start();
-
-
 	}
 
 	public void playerMoved(int delta_x, int delta_y, String direction) {
@@ -223,7 +219,7 @@ public class GUI extends Application {
 		return null;
 	}
 
-	public class JavaFxReadThread extends Thread{
+	public class JavaFxReadThread extends Thread {
 		private final StreamReader streamReader;
 
 		public JavaFxReadThread(StreamReader streamReader) {
@@ -232,19 +228,17 @@ public class GUI extends Application {
 
 		@Override
 		public void run() {
-//			Platform.runLater(()->{
-				while (true) {
-					String msg = this.streamReader.read();
+			while (true) {
+				String msg = this.streamReader.read();
 
-					if (msg != null) {
-						String[] splitted = msg.split(",");
-						System.out.println("msg message: " + msg);
-						playerMoved(Integer.parseInt(splitted[0]),Integer.parseInt(splitted[1]), splitted[2]);
+				if (msg != null) {
+					String[] splitted = msg.split(",");
 
-					}
+					Platform.runLater(() -> {
+						playerMoved(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]), splitted[2]);
+					});
 				}
-
-//			});
+			}
 		}
 	}
 }
