@@ -133,22 +133,22 @@ public class GUI extends Application {
 			primaryStage.show();
 
 			scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-				String msg=null;
+				String msg="Move,";
 				switch (event.getCode()) {
 				case UP:
-					msg="0,-1,up,"+ tcpClient.getPlayerName();
+					msg+="0,-1,up,"+ tcpClient.getPlayerName();
 					playerColisonDetection(0,-1);
 					break;
 				case DOWN:
-					msg="0,1,down,"+ tcpClient.getPlayerName();
+					msg+="0,1,down,"+ tcpClient.getPlayerName();
 					playerColisonDetection(0,1);
 					break;
 				case LEFT:
-					msg="-1,0,left,"+ tcpClient.getPlayerName();
-					playerColisonDetection(1,0);
+					msg+="-1,0,left,"+ tcpClient.getPlayerName();
+					playerColisonDetection(-1,0);
 					break;
 				case RIGHT:
-					msg="1,0,right,"+ tcpClient.getPlayerName();
+					msg+="1,0,right,"+ tcpClient.getPlayerName();
 					playerColisonDetection(1,0);
 					break;
 				default:
@@ -162,7 +162,7 @@ public class GUI extends Application {
             // Setting up standard players
 			
 			lars = new Player("Lars",9,4,"up");
-			players.add(me);
+			players.add(lars);
 			fields[9][4].setGraphic(new ImageView(hero_up));
 
 			steffen = new Player("Steffen",14,16,"up");
