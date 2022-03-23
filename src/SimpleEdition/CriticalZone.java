@@ -2,7 +2,6 @@ package SimpleEdition;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
-//Line
 public class CriticalZone {
     private Queue<String> messages = new ArrayDeque<>();
 

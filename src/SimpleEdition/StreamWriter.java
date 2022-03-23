@@ -8,12 +8,13 @@ public class StreamWriter {
     private DataOutputStream out;
 
     public StreamWriter(Socket connectionSocket) {
+        System.out.println("StreamWriter opstart");
         try {
             out = new DataOutputStream(connectionSocket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        System.out.println("StreamWriter slut");
     }
 
     public void write(String msg) {

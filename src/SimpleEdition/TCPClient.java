@@ -37,21 +37,8 @@ public class TCPClient {
 
 	public void write(String msg) {
 
-		clientWriter.write(msg + "," + playerName);
+		clientWriter.write(msg);
 	}
-	/*public static void main(String[] args) throws Exception, IOException {
-
-
-		/*System.out.println("press a s d w s to send left right up down commands command should be followed by enter");
-		ScanCharFromKeyBoard charScanner = new ScanCharFromKeyBoard(clientWriter);
-		charScanner.run();*/
-
-		/*BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-		while (true) {
-			String line = inFromUser.readLine();
-			clientWriteThread.write(line);
-		}
-	}*/
 
 	public String getPlayerName() {
 		return playerName;

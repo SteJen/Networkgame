@@ -1,10 +1,10 @@
-import java.awt.geom.RectangularShape;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import SimpleEdition.TCPClient;
 import SimpleEdition.StreamReader;
-// steffen
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -17,8 +17,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.*;
 
 public class GUI extends Application {
-//Hello - Line
-	// now for wrath now for ruin and a red dawn!
 	public static final int size = 20; 
 	public static final int scene_height = size * 20 + 100;
 	public static final int scene_width = size * 20 + 200;
@@ -38,7 +36,7 @@ public class GUI extends Application {
 	private Label[][] fields;
 	private TextArea scoreList;
 
-	private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666,"Lars"); //Steffen
+	private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666,"Line"); //Steffen
 	//private TCPClient tcpClient = new TCPClient("10.10.138.207", 6666); //Lars
 //	private TCPClient tcpClient = new TCPClient("10.10.131.77", 6666); //Line
 //	private TCPClient tcpClient = new TCPClient("localhost", 6666); //Local
@@ -155,7 +153,6 @@ public class GUI extends Application {
 					break;
 				}
 				if (msg != null) {
-//					tcpClient.getClientWriter().write(msg);
 					tcpClient.write(msg);
 				}
 			});
@@ -173,9 +170,9 @@ public class GUI extends Application {
 			players.add(line);
 			fields[13][15].setGraphic(new ImageView(hero_up));
 
-			me=lars;
+//			me=lars;
 //			me=steffen;
-//			me=line;
+			me=line;
 
 
 			scoreList.setText(getScoreList());
@@ -220,18 +217,14 @@ public class GUI extends Application {
 		int x = player.getXpos(),y = player.getYpos();
 
 		if (board[y+delta_y].charAt(x+delta_x)=='w') {
-//			player.addPoints(-1);
-//			tcpClient.write("Point"+"," + player.name);
+			//Do nothing
 		}
 
 		else {
 			Player p = getPlayerAt(x+delta_x,y+delta_y);
 			if (p!=null) {
-//				player.addPoints(10);
-//				p.addPoints(-10);
+//				Do nothing
 			} else {
-//				player.addPoints(1);
-
 				fields[x][y].setGraphic(new ImageView(image_floor));
 				x+=delta_x;
 				y+=delta_y;
@@ -253,48 +246,8 @@ public class GUI extends Application {
 				player.setYpos(y);
 			}
 		}
-//		scoreList.setText(getScoreList());
 	}
-//	public void playerMoved(int delta_x, int delta_y, String direction, Player player) {
-//		player.direction = direction;
-//		int x = player.getXpos(),y = player.getYpos();
-//
-//		if (board[y+delta_y].charAt(x+delta_x)=='w') {
-//			player.addPoints(-1);
-//			tcpClient.write("Point"+"," + player.name);
-//		}
-//
-//		else {
-//			Player p = getPlayerAt(x+delta_x,y+delta_y);
-//			if (p!=null) {
-//              player.addPoints(10);
-//              p.addPoints(-10);
-//			} else {
-//				player.addPoints(1);
-//
-//				fields[x][y].setGraphic(new ImageView(image_floor));
-//				x+=delta_x;
-//				y+=delta_y;
-//
-//				if (direction.equals("right")) {
-//					fields[x][y].setGraphic(new ImageView(hero_right));
-//				};
-//				if (direction.equals("left")) {
-//					fields[x][y].setGraphic(new ImageView(hero_left));
-//				};
-//				if (direction.equals("up")) {
-//					fields[x][y].setGraphic(new ImageView(hero_up));
-//				};
-//				if (direction.equals("down")) {
-//					fields[x][y].setGraphic(new ImageView(hero_down));
-//				};
-//
-//				player.setXpos(x);
-//				player.setYpos(y);
-//			}
-//		}
-//		scoreList.setText(getScoreList());
-//	}
+
 
 	public String getScoreList() {
 		StringBuffer b = new StringBuffer(100);
@@ -333,7 +286,7 @@ public class GUI extends Application {
 
 					if (splitted[0].equals("Move")) {
 						if (splitted[4].equals("Lars")) {
-							currentPlayer = me;
+							currentPlayer = lars;
 						} else if (splitted[4].equals("Line")) {
 							currentPlayer = line;
 						}else if (splitted[4].equals("Steffen")) {
@@ -347,7 +300,7 @@ public class GUI extends Application {
 
 					} else if (splitted[0].equals("Point")) {
 						if (splitted[2].equals("Lars")) {
-							currentPlayer = me;
+							currentPlayer = lars;
 						} else if (splitted[2].equals("Line")) {
 							currentPlayer = line;
 						}else if (splitted[2].equals("Steffen")) {
@@ -357,10 +310,7 @@ public class GUI extends Application {
 						Platform.runLater(() -> {
 							updatePoint(Integer.parseInt(splitted[1]), finalCurrentPlayer);
 						});
-
 					}
-
-
 				}
 			}
 		}
