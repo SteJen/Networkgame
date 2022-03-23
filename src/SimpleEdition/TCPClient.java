@@ -8,8 +8,10 @@ public class TCPClient {
 	private StreamReader clientReadThread;
 	private StreamWriter clientWriter;
 	private Socket clientSocket;
+	private String playerName;
 
-	public TCPClient(String ip, int port){
+	public TCPClient(String ip, int port, String playerName){
+		this.playerName = playerName;
 		try {
 			clientSocket = new Socket(ip, port);
 		} catch (IOException e) {
@@ -32,6 +34,11 @@ public class TCPClient {
 		return clientWriter;
 	}
 
+
+	public void write(String msg) {
+
+		clientWriter.write(msg + "," + playerName);
+	}
 	/*public static void main(String[] args) throws Exception, IOException {
 
 

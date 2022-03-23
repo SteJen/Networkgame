@@ -1,3 +1,4 @@
+import java.awt.geom.RectangularShape;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,14 +28,18 @@ public class GUI extends Application {
 	public static Image hero_right,hero_left,hero_up,hero_down;
 
 	public static Player me;
+	public static Player steffen;
+	public static Player line;
+
 	public static List<Player> players = new ArrayList<Player>();
 
 	private Label[][] fields;
 	private TextArea scoreList;
 
-	private TCPClient tcpClient = new TCPClient("localhost", 6666); //Steffen
-	//private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666); //Lars
-//	private TCPClient tcpClient = new TCPClient("localHost", 6666); //Line
+	private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666,"Lars"); //Steffen
+	//private TCPClient tcpClient = new TCPClient("10.10.138.207", 6666); //Lars
+//	private TCPClient tcpClient = new TCPClient("10.10.131.77", 6666); //Line
+//	private TCPClient tcpClient = new TCPClient("localhost", 6666); //Local
 
 	private JavaFxReadThread javaFxReadThread;
 
@@ -144,39 +149,49 @@ public class GUI extends Application {
 					break;
 				}
 				if (msg != null) {
-					tcpClient.getClientWriter().write(msg);
+//					tcpClient.getClientWriter().write(msg);
+					tcpClient.write(msg);
 				}
 			});
             // Setting up standard players
 			
-			me = new Player("Orville",9,4,"up");
+			me = new Player("Lars",9,4,"up");
 			players.add(me);
 			fields[9][4].setGraphic(new ImageView(hero_up));
 
-			Player harry = new Player("Harry",14,15,"up");
-			players.add(harry);
-			fields[14][15].setGraphic(new ImageView(hero_up));
+			steffen = new Player("Steffen",14,16,"up");
+			players.add(steffen);
+			fields[14][16].setGraphic(new ImageView(hero_up));
+
+			line = new Player("Line",13,15,"up");
+			players.add(line);
+			fields[13][15].setGraphic(new ImageView(hero_up));
 
 			scoreList.setText(getScoreList());
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+
+		javaFxReadThread = new JavaFxReadThread(tcpClient.getClientReadThread());
+		javaFxReadThread.start();
+
+
 	}
 
-	public void playerMoved(int delta_x, int delta_y, String direction) {
-		me.direction = direction;
-		int x = me.getXpos(),y = me.getYpos();
+	public void playerMoved(int delta_x, int delta_y, String direction, Player player) {
+		player.direction = direction;
+		int x = player.getXpos(),y = player.getYpos();
 
 		if (board[y+delta_y].charAt(x+delta_x)=='w') {
-			me.addPoints(-1);
+			player.addPoints(-1);
 		} 
 		else {
 			Player p = getPlayerAt(x+delta_x,y+delta_y);
 			if (p!=null) {
-              me.addPoints(10);
+              player.addPoints(10);
               p.addPoints(-10);
 			} else {
-				me.addPoints(1);
+				player.addPoints(1);
 			
 				fields[x][y].setGraphic(new ImageView(image_floor));
 				x+=delta_x;
@@ -195,8 +210,8 @@ public class GUI extends Application {
 					fields[x][y].setGraphic(new ImageView(hero_down));
 				};
 
-				me.setXpos(x);
-				me.setYpos(y);
+				player.setXpos(x);
+				player.setYpos(y);
 			}
 		}
 		scoreList.setText(getScoreList());
@@ -231,11 +246,20 @@ public class GUI extends Application {
 			while (true) {
 				String msg = this.streamReader.read();
 
+				Player currentPlayer = null;
 				if (msg != null) {
 					String[] splitted = msg.split(",");
+					if (splitted[3].equals("Lars")) {
+						currentPlayer = me;
+					} else if (splitted[3].equals("Line")) {
+						currentPlayer = line;
+					}else if (splitted[3].equals("Steffen")) {
+						currentPlayer = steffen;
+					}
 
+					Player finalCurrentPlayer = currentPlayer;
 					Platform.runLater(() -> {
-						playerMoved(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]), splitted[2]);
+						playerMoved(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]), splitted[2], finalCurrentPlayer);
 					});
 				}
 			}
