@@ -52,4 +52,8 @@ public class TCPClient {
 			clientWriteThread.write(line);
 		}
 	}*/
+
+	public String getPlayerName() {
+		return playerName;
+	}
 }
