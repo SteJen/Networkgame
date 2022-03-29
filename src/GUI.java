@@ -27,7 +27,7 @@ public class GUI extends Application {
 
 
 	public static Player me;
-	public static Player lars;
+	//public static Player lars;
 	public static Player steffen;
 	public static Player line;
 
@@ -36,10 +36,10 @@ public class GUI extends Application {
 	private Label[][] fields;
 	private TextArea scoreList;
 
-	//private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666,"Line"); //Steffen
+	private TCPClient tcpClient = new TCPClient("10.10.139.198", 6666,"Steffen"); //Steffen
 	//private TCPClient tcpClient = new TCPClient("10.10.138.207", 6666); //Lars
 //	private TCPClient tcpClient = new TCPClient("10.10.131.77", 6666); //Line
-	private TCPClient tcpClient = new TCPClient("10.10.138.206", 6666, "Line"); //Local
+	//private TCPClient tcpClient = new TCPClient("10.10.138.206", 6666, "Line"); //Local
 
 	private JavaFxReadThread javaFxReadThread;
 
@@ -158,9 +158,9 @@ public class GUI extends Application {
 			});
             // Setting up standard players
 			
-			lars = new Player("Lars",9,4,"up");
+			/*lars = new Player("Lars",9,4,"up");
 			players.add(lars);
-			fields[9][4].setGraphic(new ImageView(hero_up));
+			fields[9][4].setGraphic(new ImageView(hero_up));*/
 
 			steffen = new Player("Steffen",14,16,"up");
 			players.add(steffen);
@@ -171,8 +171,8 @@ public class GUI extends Application {
 			fields[13][15].setGraphic(new ImageView(hero_up));
 
 //			me=lars;
-			//me=steffen;
-			me=line;
+			me=steffen;
+			//me=line;
 
 			scoreList.setText(getScoreList());
 		} catch(Exception e) {
@@ -277,10 +277,10 @@ public class GUI extends Application {
 
 					String[] splitted = msg.split(",");
 
-					if (splitted[0].equals("Move")) {
-						if (splitted[4].equals("Lars")) {
+					if (splitted[0].equals("Move") && splitted.length == 5) {
+						/*if (splitted[4].equals("Lars")) {
 							currentPlayer = lars;
-						} else if (splitted[4].equals("Line")) {
+						} else*/ if (splitted[4].equals("Line")) {
 							currentPlayer = line;
 						}else if (splitted[4].equals("Steffen")) {
 							currentPlayer = steffen;
@@ -292,9 +292,9 @@ public class GUI extends Application {
 						});
 
 					} else if (splitted[0].equals("Point")) {
-						if (splitted[2].equals("Lars")) {
+						/*if (splitted[2].equals("Lars")) {
 							currentPlayer = lars;
-						} else if (splitted[2].equals("Line")) {
+						} else*/ if (splitted[2].equals("Line")) {
 							currentPlayer = line;
 						}else if (splitted[2].equals("Steffen")) {
 							currentPlayer = steffen;
